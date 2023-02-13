@@ -78,9 +78,30 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(items)
 }
 
+func patchItem(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "PATCH" {
+		fmt.Fprintln(w, "wrong method, needs PATCH")
+		return
+	}
+	var toDo Item
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	json.NewDecoder(r.Body).Decode(&toDo)
+	for index, todoItem := range items {
+		if todoItem.Id == id {
+			todoItem.Content = toDo.Content
+			items[index] = todoItem
+		}
+	}
+	json.NewEncoder(w).Encode(toDo)
+}
 func handleRoutes() {
 	http.HandleFunc("/item/create", createItem)
 	http.HandleFunc("/item/delete", deleteItem)
+	http.HandleFunc("/item/patch", patchItem)
 	http.HandleFunc("/item/read", getOneItem)
 	http.HandleFunc("/items", getItems)
 	http.HandleFunc("/", sayHello)
