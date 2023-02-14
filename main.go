@@ -54,7 +54,7 @@ func showOneList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func showTodos(w http.ResponseWriter, r *http.Request) {
+func showOneTodo(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		io.WriteString(w, "Wrong method; needs GET")
 		http.NotFound(w, r)
@@ -62,9 +62,20 @@ func showTodos(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := returnQueryId(w, r)
+	secondId, err := strconv.Atoi(r.URL.Query().Get("secId"))
+	if err != nil || secondId < 1 {
+		io.WriteString(w, "invalid todo id\n")
+		http.NotFound(w, r)
+		return
+
+	}
 	for _, list := range lists {
 		if list.Id == id {
-			json.NewEncoder(w).Encode(list.Todos)
+			for _, todo := range list.Todos {
+				if todo.Id == secondId {
+					json.NewEncoder(w).Encode(todo)
+				}
+			}
 		}
 	}
 
@@ -80,7 +91,7 @@ func handleRoutes() {
 	})
 	http.HandleFunc("/api/v1/lists", showLists)
 	http.HandleFunc("/api/v1/list", showOneList)
-	http.HandleFunc("/api/v1/lists/todos", showTodos)
+	http.HandleFunc("/api/v1/lists/todos", showOneTodo)
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
 
