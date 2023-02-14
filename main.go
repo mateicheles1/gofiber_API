@@ -172,7 +172,7 @@ func main() {
 			Id:    1,
 			Owner: "Matei Cheles",
 			Todos: []todoItem{
-				{1, "wash the dishes"},
+				{1, "learn go best practices"},
 				{2, "watch netflix"},
 				{3, "learn RESTful"},
 			},
