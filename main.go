@@ -172,16 +172,16 @@ func main() {
 			Id:    1,
 			Owner: "Matei Cheles",
 			Todos: []todoItem{
-				{1, "washing the dishes"},
-				{2, "watching netflix"},
-				{3, "going out"},
+				{1, "wash the dishes"},
+				{2, "watch netflix"},
+				{3, "learn RESTful"},
 			},
 		},
 		{
 			Id:    2,
 			Owner: "Tudor Datcu",
 			Todos: []todoItem{
-				{1, "water the plants"},
+				{1, "grab a coffee"},
 				{2, "check matei's work"},
 				{3, "watch a docuseries"},
 			},
