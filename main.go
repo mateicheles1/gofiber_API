@@ -156,15 +156,47 @@ func showOneTodo(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func createOneTodo(w http.ResponseWriter, r *http.Request) {
+
+	var todo todoItem
+	if r.Method != "POST" {
+		io.WriteString(w, "wrong method; needs POST")
+		return
+	}
+	id := returnQueryId(w, r)
+
+	json.NewDecoder(r.Body).Decode(&todo)
+	if todo.Content == "" || todo.Id == 0 {
+		io.WriteString(w, "invalid writing todo")
+		return
+	}
+
+	for index, list := range lists {
+		if list.Id == id {
+			lists[index].Todos = append(lists[index].Todos, todo)
+			json.NewEncoder(w).Encode(lists[index])
+		}
+	}
+}
+
+/*
+########## ROUTES ##########
+*/
+
 func handleRoutes() {
+	http.HandleFunc("/api/v1/lists/todo/create", createOneTodo)
+	http.HandleFunc("/api/v1/lists/todos", showOneTodo)
 	http.HandleFunc("/", showLists)
 	http.HandleFunc("/api/v1/list", showOneList)
 	http.HandleFunc("/api/v1/list/create", createList)
 	http.HandleFunc("/api/v1/list/update", updateList)
 	http.HandleFunc("/api/v1/list/delete", deleteList)
-	http.HandleFunc("/api/v1/lists/todos", showOneTodo)
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
+
+/*
+########## MAIN ##########
+*/
 
 func main() {
 	lists = []todoList{
@@ -172,7 +204,7 @@ func main() {
 			Id:    1,
 			Owner: "Matei Cheles",
 			Todos: []todoItem{
-				{1, "learn go best practices"},
+				{1, "learn Go best practices"},
 				{2, "watch netflix"},
 				{3, "learn RESTful"},
 			},
