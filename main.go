@@ -179,13 +179,64 @@ func createOneTodo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func deleteOneTodo(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "DELETE" {
+		io.WriteString(w, "wrong method; needs DELETE")
+		return
+	}
+
+	id := returnQueryId(w, r)
+	secondId := returnSecondQueryId(w, r)
+
+	for _, list := range lists {
+		if list.Id == id {
+			for index, todo := range list.Todos {
+				if todo.Id == secondId {
+					json.NewEncoder(w).Encode(todo)
+					list.Todos = append(list.Todos[:index], list.Todos[index+1:]...)
+				}
+			}
+		}
+	}
+}
+
+func updateOneTodo(w http.ResponseWriter, r *http.Request) {
+	var reqBodyTodo todoItem
+
+	if r.Method != "PATCH" {
+		io.WriteString(w, "wrong method; needs patch")
+		return
+	}
+
+	json.NewDecoder(r.Body).Decode(&reqBodyTodo)
+	if reqBodyTodo.Content == "" || reqBodyTodo.Id == 0 {
+		io.WriteString(w, "error in patching todo; invalid id or content")
+		return
+	}
+
+	id := returnQueryId(w, r)
+	secondId := returnSecondQueryId(w, r)
+
+	for _, list := range lists {
+		if list.Id == id {
+			for index, todo := range list.Todos {
+				if todo.Id == secondId {
+					list.Todos[index] = reqBodyTodo
+				}
+			}
+		}
+	}
+}
+
 /*
 ########## ROUTES ##########
 */
 
 func handleRoutes() {
-	http.HandleFunc("/api/v1/lists/todo/create", createOneTodo)
 	http.HandleFunc("/api/v1/lists/todos", showOneTodo)
+	http.HandleFunc("/api/v1/lists/todo/create", createOneTodo)
+	http.HandleFunc("/api/v1/lists/todo/update", updateOneTodo)
+	http.HandleFunc("/api/v1/lists/todo/delete", deleteOneTodo)
 	http.HandleFunc("/", showLists)
 	http.HandleFunc("/api/v1/list", showOneList)
 	http.HandleFunc("/api/v1/list/create", createList)
