@@ -88,7 +88,7 @@ func createList(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&list)
 	if list.Id < 1 || list.Owner == "" || len(list.Todos) == 0 {
-		io.WriteString(w, "error writing list")
+		io.WriteString(w, "error creating list; invalid id,todos or owner")
 		return
 	}
 	lists = append(lists, list)
@@ -107,6 +107,10 @@ func updateList(w http.ResponseWriter, r *http.Request) {
 	id := returnQueryId(w, r)
 	json.NewDecoder(r.Body).Decode(&placeHolderList)
 
+	if placeHolderList.Owner == "" {
+		io.WriteString(w, "error patching todo; invalid owner")
+		return
+	}
 	for index, list := range lists {
 		if list.Id == id {
 			list.Owner = placeHolderList.Owner
@@ -166,8 +170,8 @@ func createOneTodo(w http.ResponseWriter, r *http.Request) {
 	id := returnQueryId(w, r)
 
 	json.NewDecoder(r.Body).Decode(&todo)
-	if todo.Content == "" || todo.Id == 0 {
-		io.WriteString(w, "invalid writing todo")
+	if todo.Content == "" || todo.Id < 1 {
+		io.WriteString(w, "error writing todo; invalid id or content")
 		return
 	}
 
@@ -219,8 +223,8 @@ func updateOneTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewDecoder(r.Body).Decode(&reqBodyTodo)
-	if reqBodyTodo.Content == "" || reqBodyTodo.Id == 0 {
-		io.WriteString(w, "error in patching todo; invalid id or content")
+	if reqBodyTodo.Content == "" {
+		io.WriteString(w, "error in patching todo; invalid content")
 		return
 	}
 
@@ -243,11 +247,11 @@ func updateOneTodo(w http.ResponseWriter, r *http.Request) {
 */
 
 func handleRoutes() {
+	http.HandleFunc("/", showLists)
 	http.HandleFunc("/api/v1/lists/todos", showOneTodo)
 	http.HandleFunc("/api/v1/lists/todo/create", createOneTodo)
 	http.HandleFunc("/api/v1/lists/todo/update", updateOneTodo)
 	http.HandleFunc("/api/v1/lists/todo/delete", deleteOneTodo)
-	http.HandleFunc("/", showLists)
 	http.HandleFunc("/api/v1/list", showOneList)
 	http.HandleFunc("/api/v1/list/create", createList)
 	http.HandleFunc("/api/v1/list/update", updateList)
