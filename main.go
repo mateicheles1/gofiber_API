@@ -188,12 +188,22 @@ func deleteOneTodo(w http.ResponseWriter, r *http.Request) {
 	id := returnQueryId(w, r)
 	secondId := returnSecondQueryId(w, r)
 
-	for _, list := range lists {
-		if list.Id == id {
-			for index, todo := range list.Todos {
-				if todo.Id == secondId {
-					json.NewEncoder(w).Encode(todo)
-					list.Todos = append(list.Todos[:index], list.Todos[index+1:]...)
+	// for _, list := range lists {
+	// 	if list.Id == id {
+	// 		for index, todo := range list.Todos {
+	// 			if todo.Id == secondId {
+	// 				json.NewEncoder(w).Encode(todo)
+	// 				list.Todos = append(list.Todos[:index], list.Todos[index+1:]...)
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	for i := 0; i < len(lists); i++ {
+		if lists[i].Id == id {
+			for j := 0; j < len(lists[i].Todos); j++ {
+				if lists[i].Todos[j].Id == secondId {
+					lists[i].Todos = append(lists[i].Todos[:j], lists[i].Todos[j+1:]...)
 				}
 			}
 		}
