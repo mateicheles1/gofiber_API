@@ -235,7 +235,7 @@ func updateOneTodo(w http.ResponseWriter, r *http.Request) {
 		if list.Id == id {
 			for index, todo := range list.Todos {
 				if todo.Id == secondId {
-					list.Todos[index] = reqBodyTodo
+					list.Todos[index].Content = reqBodyTodo.Content
 				}
 			}
 		}
