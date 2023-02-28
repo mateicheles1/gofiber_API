@@ -1,6 +1,9 @@
 package data
 
-import "golang_api_v2/models"
+import (
+	"fmt"
+	"golang_api_v2/models"
+)
 
 var MockData = models.AppData{
 	Data: []models.ToDoList{
@@ -10,6 +13,7 @@ var MockData = models.AppData{
 			{Id: "3", ListId: "1", Content: "Grab a coffee"},
 		},
 		},
+
 		{Id: "2", Owner: "Tudor Datcu", Todos: []models.ToDo{
 			{Id: "1", ListId: "2", Content: "Watch a docuseries"},
 			{Id: "2", ListId: "2", Content: "Have daily"},
@@ -17,4 +21,10 @@ var MockData = models.AppData{
 		},
 		},
 	},
+}
+
+func Looping() {
+	for _, list := range MockData.Data {
+		fmt.Println(list.Todos)
+	}
 }
