@@ -15,5 +15,6 @@ func HandleRoutes() {
 
 	app.Get("api/v2/todo/:listid/:todoid", functions.GetToDoById)
 	app.Patch("api/v2/todo/:listid/:todoid", functions.UpdateToDoById)
+	app.Delete("api/v2/todo/:listid/:todoid", functions.DeleteToDoById)
 	log.Fatal(app.Listen(":8000"))
 }

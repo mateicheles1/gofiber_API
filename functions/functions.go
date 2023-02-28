@@ -61,3 +61,16 @@ func UpdateToDoById(c *fiber.Ctx) error {
 	return nil
 
 }
+
+func DeleteToDoById(c *fiber.Ctx) error {
+
+	for i := 0; i < len(mockData.Data); i++ {
+		for j := 0; j < len(mockData.Data[i].Todos); j++ {
+			if mockData.Data[i].Id == c.Params("listid") && mockData.Data[i].Todos[j].Id == c.Params("todoid") {
+				mockData.Data[i].Todos = append(mockData.Data[i].Todos[:j], mockData.Data[i].Todos[j+1:]...)
+			}
+		}
+	}
+
+	return nil
+}
