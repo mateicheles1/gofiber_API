@@ -10,17 +10,23 @@ import (
 var mockData = data.MockData
 
 func ToDoLists(c *fiber.Ctx) error {
-	return c.JSON(mockData)
+
+	c.JSON(mockData.Data)
+
+	return nil
 }
 
 func ToDos(c *fiber.Ctx) error {
+
 	var todos []models.ToDo
 
 	for _, list := range mockData.Data {
 		todos = append(todos, list.Todos...)
 	}
 
-	return c.JSON(todos)
+	c.JSON(todos)
+
+	return nil
 }
 
 func GetToDoById(c *fiber.Ctx) error {
@@ -34,5 +40,10 @@ func GetToDoById(c *fiber.Ctx) error {
 			}
 		}
 	}
+
 	return nil
 }
+
+// func UpdateToDoById(c *fiber.Ctx) error {
+
+// }
