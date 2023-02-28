@@ -1,7 +1,6 @@
 package data
 
 import (
-	"fmt"
 	"golang_api_v2/models"
 )
 
@@ -21,10 +20,4 @@ var MockData = models.AppData{
 		},
 		},
 	},
-}
-
-func Looping() {
-	for _, list := range MockData.Data {
-		fmt.Println(list.Todos)
-	}
 }
