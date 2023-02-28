@@ -22,3 +22,17 @@ func ToDos(c *fiber.Ctx) error {
 
 	return c.JSON(todos)
 }
+
+func GetToDoById(c *fiber.Ctx) error {
+
+	for _, list := range mockData.Data {
+		for _, todo := range list.Todos {
+			if todo.ListId == c.Params("listid") && todo.Id == c.Params("todoid") {
+				c.JSON(todo)
+			} else {
+				return fiber.ErrBadRequest
+			}
+		}
+	}
+	return nil
+}
