@@ -44,16 +44,16 @@ func GetToDoById(c *fiber.Ctx) error {
 
 func UpdateToDoById(c *fiber.Ctx) error {
 
-	newContent := new(models.UpdatedContent)
+	updatedContent := new(models.UpdatedContent)
 
 	for _, list := range mockData.Data {
 		for index, todo := range list.Todos {
 			if list.Id == c.Params("listid") && todo.Id == c.Params("todoid") {
-				if err := c.BodyParser(newContent); err != nil {
+				if err := c.BodyParser(updatedContent); err != nil {
 					return err
 				}
-				c.JSON(newContent)
-				list.Todos[index].Content = newContent.Content
+				c.JSON(updatedContent)
+				list.Todos[index].Content = updatedContent.Content
 			}
 		}
 	}
