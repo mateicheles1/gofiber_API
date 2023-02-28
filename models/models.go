@@ -16,6 +16,6 @@ type AppData struct {
 	Data []ToDoList `json:"data"`
 }
 
-type UpdatedContent struct {
+type RequestBody struct {
 	Content string `json:"content"`
 }
