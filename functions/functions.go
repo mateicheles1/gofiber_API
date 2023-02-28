@@ -35,8 +35,6 @@ func GetToDoById(c *fiber.Ctx) error {
 		for _, todo := range list.Todos {
 			if todo.ListId == c.Params("listid") && todo.Id == c.Params("todoid") {
 				c.JSON(todo)
-			} else {
-				return fiber.ErrBadRequest
 			}
 		}
 	}
@@ -44,6 +42,22 @@ func GetToDoById(c *fiber.Ctx) error {
 	return nil
 }
 
-// func UpdateToDoById(c *fiber.Ctx) error {
+func UpdateToDoById(c *fiber.Ctx) error {
 
-// }
+	newContent := new(models.UpdatedContent)
+
+	for _, list := range mockData.Data {
+		for index, todo := range list.Todos {
+			if list.Id == c.Params("listid") && todo.Id == c.Params("todoid") {
+				if err := c.BodyParser(newContent); err != nil {
+					return err
+				}
+				c.JSON(newContent)
+				list.Todos[index].Content = newContent.Content
+			}
+		}
+	}
+
+	return nil
+
+}

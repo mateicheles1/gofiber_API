@@ -15,3 +15,7 @@ type ToDoList struct {
 type AppData struct {
 	Data []ToDoList `json:"data"`
 }
+
+type UpdatedContent struct {
+	Content string `json:"content"`
+}
