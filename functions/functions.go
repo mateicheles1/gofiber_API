@@ -44,7 +44,7 @@ func GetToDoById(c *fiber.Ctx) error {
 
 func UpdateToDoById(c *fiber.Ctx) error {
 
-	requestBody := new(models.RequestBody)
+	requestBody := new(models.RequestBodyToDo)
 
 	for _, list := range mockData.Data {
 		for index, todo := range list.Todos {
@@ -71,6 +71,82 @@ func DeleteToDoById(c *fiber.Ctx) error {
 			}
 		}
 	}
+
+	return nil
+}
+
+func CreateToDoByListId(c *fiber.Ctx) error {
+	requestBody := new(models.RequestBodyToDo)
+
+	if err := c.BodyParser(requestBody); err != nil {
+		return err
+	}
+
+	requstBodyCoersion := models.ToDo(*requestBody)
+
+	for index, list := range mockData.Data {
+		if list.Id == c.Params("listid") {
+			mockData.Data[index].Todos = append(list.Todos, requstBodyCoersion)
+		}
+	}
+
+	return nil
+}
+
+func GetToDoListById(c *fiber.Ctx) error {
+	for _, list := range mockData.Data {
+		if list.Id == c.Params("listid") {
+			c.JSON(list)
+		}
+	}
+
+	return nil
+}
+
+func UpdateToDoListById(c *fiber.Ctx) error {
+	requestBody := new(models.RequestBodyList)
+
+	if err := c.BodyParser(requestBody); err != nil {
+		return err
+	}
+
+	for index, list := range mockData.Data {
+		if list.Id == c.Params("listid") {
+			mockData.Data[index].Owner = requestBody.Owner
+		}
+	}
+
+	return nil
+}
+
+func DeleteToDoListById(c *fiber.Ctx) error {
+
+	for index, list := range mockData.Data {
+		if list.Id == c.Params("listid") {
+			mockData.Data = append(mockData.Data[:index], mockData.Data[index+1:]...)
+		}
+	}
+
+	return nil
+}
+
+func CreateToDoList(c *fiber.Ctx) error {
+
+	requestBodyList := new(models.RequestBodyList)
+
+	if err := c.BodyParser(requestBodyList); err != nil {
+		return err
+	}
+
+	requestBodyListCoercion := models.ToDoList(*requestBodyList)
+
+	if requestBodyListCoercion.Id < "1" || requestBodyListCoercion.Owner == "" || len(requestBodyListCoercion.Todos) == 0 {
+		return fiber.ErrBadRequest
+	}
+	c.JSON(requestBodyListCoercion)
+
+	mockData.Data = append(mockData.Data, requestBodyListCoercion)
+	// c.JSON(mockData.Data)
 
 	return nil
 }
