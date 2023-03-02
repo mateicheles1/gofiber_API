@@ -91,11 +91,11 @@ func CreateToDoByListId(c *fiber.Ctx) error {
 			requestBodyCoercion.ListId = c.Params("listid")
 
 			for _, todo := range list.Todos {
-				todoid, err := strconv.Atoi(todo.Id)
+				todoidInt, err := strconv.Atoi(todo.Id)
 				if err != nil {
 					return err
 				}
-				requestBodyCoercion.Id = strconv.Itoa(todoid + 1)
+				requestBodyCoercion.Id = strconv.Itoa(todoidInt + 1)
 			}
 
 			mockData.Data[index].Todos = append(mockData.Data[index].Todos, requestBodyCoercion)
