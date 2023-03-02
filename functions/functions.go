@@ -86,7 +86,7 @@ func CreateToDoByListId(c *fiber.Ctx) error {
 
 	for index, list := range mockData.Data {
 		if list.Id == c.Params("listid") {
-			mockData.Data[index].Todos = append(list.Todos, requstBodyCoersion)
+			mockData.Data[index].Todos = append(mockData.Data[index].Todos, requstBodyCoersion)
 		}
 	}
 
@@ -143,10 +143,10 @@ func CreateToDoList(c *fiber.Ctx) error {
 	if requestBodyListCoercion.Id < "1" || requestBodyListCoercion.Owner == "" || len(requestBodyListCoercion.Todos) == 0 {
 		return fiber.ErrBadRequest
 	}
+
 	c.JSON(requestBodyListCoercion)
 
 	mockData.Data = append(mockData.Data, requestBodyListCoercion)
-	// c.JSON(mockData.Data)
 
 	return nil
 }

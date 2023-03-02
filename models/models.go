@@ -18,7 +18,7 @@ type AppData struct {
 
 type RequestBodyToDo struct {
 	Id      string `json:"id"`
-	ListId  string `json:"listid"`
+	ListId  string `json:"listidrequest"`
 	Content string `json:"content"`
 }
 
