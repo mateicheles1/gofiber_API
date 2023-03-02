@@ -3,6 +3,7 @@ package functions
 import (
 	"golang_api_v2/data"
 	"golang_api_v2/models"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -82,11 +83,20 @@ func CreateToDoByListId(c *fiber.Ctx) error {
 		return err
 	}
 
-	requstBodyCoersion := models.ToDo(*requestBody)
+	requestBodyCoercion := models.ToDo(*requestBody)
 
 	for index, list := range mockData.Data {
 		if list.Id == c.Params("listid") {
-			mockData.Data[index].Todos = append(mockData.Data[index].Todos, requstBodyCoersion)
+			requestBodyCoercion.ListId = c.Params("listid")
+
+			for _, todo := range list.Todos {
+				todoid, err := strconv.Atoi(todo.Id)
+				if err != nil {
+					return err
+				}
+				requestBodyCoercion.Id = strconv.Itoa(todoid + 1)
+			}
+			mockData.Data[index].Todos = append(mockData.Data[index].Todos, requestBodyCoercion)
 		}
 	}
 
