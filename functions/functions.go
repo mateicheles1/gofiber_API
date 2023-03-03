@@ -99,6 +99,7 @@ func CreateToDoByListId(c *fiber.Ctx) error {
 			}
 
 			mockData.Data[index].Todos = append(mockData.Data[index].Todos, requestBodyCoercion)
+			c.JSON(requestBodyCoercion)
 		}
 	}
 
@@ -168,9 +169,9 @@ func CreateToDoList(c *fiber.Ctx) error {
 
 	}
 
-	c.JSON(requestBodyListCoercion)
-
 	mockData.Data = append(mockData.Data, requestBodyListCoercion)
+
+	c.JSON(requestBodyListCoercion)
 
 	return nil
 }
