@@ -53,8 +53,8 @@ func UpdateToDoById(c *fiber.Ctx) error {
 				if err := c.BodyParser(requestBody); err != nil {
 					return err
 				}
-				c.JSON(requestBody)
 				list.Todos[index].Content = requestBody.Content
+				c.JSON(list.Todos[index])
 			}
 		}
 	}
@@ -69,6 +69,7 @@ func DeleteToDoById(c *fiber.Ctx) error {
 		for j := 0; j < len(mockData.Data[i].Todos); j++ {
 			if mockData.Data[i].Id == c.Params("listid") && mockData.Data[i].Todos[j].Id == c.Params("todoid") {
 				mockData.Data[i].Todos = append(mockData.Data[i].Todos[:j], mockData.Data[i].Todos[j+1:]...)
+				c.JSON(mockData.Data[i].Todos)
 			}
 		}
 	}
@@ -126,6 +127,7 @@ func UpdateToDoListById(c *fiber.Ctx) error {
 	for index, list := range mockData.Data {
 		if list.Id == c.Params("listid") {
 			mockData.Data[index].Owner = requestBody.Owner
+			c.JSON(mockData.Data[index])
 		}
 	}
 
@@ -139,6 +141,8 @@ func DeleteToDoListById(c *fiber.Ctx) error {
 			mockData.Data = append(mockData.Data[:index], mockData.Data[index+1:]...)
 		}
 	}
+
+	c.JSON(mockData.Data)
 
 	return nil
 }
